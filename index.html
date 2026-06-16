@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AeroPuzzle - Gesture Controlled Puzzle</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- MediaPipe CDN dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <!-- canvas-confetti for win celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body class="dark-theme">
+  <!-- Animated Background elements -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <i class="fa-solid fa-wind logo-icon"></i>
+        <h1>Aero<span>Puzzle</span></h1>
+      </div>
+      <div class="game-status-bar">
+        <div class="status-indicator" id="tracking-status">
+          <span class="status-dot red"></span>
+          <span class="status-text">Camera Inactive</span>
+        </div>
+        <div class="timer" id="game-timer">00:00.00</div>
+      </div>
+    </header>
+
+    <main class="main-layout">
+      <!-- Left side: camera feed and hand tracking -->
+      <section class="panel camera-panel">
+        <div class="panel-header">
+          <h2><i class="fa-solid fa-video"></i> Gesture Tracking</h2>
+          <button id="toggle-camera-btn" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-play"></i> Start Camera
+          </button>
+        </div>
+        <div class="camera-wrapper">
+          <video id="webcam" autoplay playsinline muted style="display: none;"></video>
+          <canvas id="camera-overlay"></canvas>
+          <div class="camera-placeholder" id="camera-placeholder">
+            <i class="fa-solid fa-hand-holding-hand placeholder-icon"></i>
+            <p>Start your camera to begin playing</p>
+            <span class="subtext">AeroPuzzle uses your webcam and hand gestures to interact. No mouse needed!</span>
+          </div>
+          <!-- Calibration hint -->
+          <div class="action-prompt" id="action-prompt">
+            Position both index fingers to define crop frame...
+          </div>
+        </div>
+      </section>
+
+      <!-- Right side: puzzle area / configuration -->
+      <section class="panel puzzle-panel">
+        <div class="panel-header">
+          <h2><i class="fa-solid fa-puzzle-piece"></i> Puzzle Canvas</h2>
+          <div class="difficulty-selector">
+            <button class="btn btn-outline btn-sm active" data-grid="3">3x3</button>
+            <button class="btn btn-outline btn-sm" data-grid="4">4x4</button>
+            <button class="btn btn-outline btn-sm" data-grid="5">5x5</button>
+          </div>
+        </div>
+
+        <div class="puzzle-container">
+          <div class="puzzle-grid-wrapper" id="puzzle-grid-wrapper">
+            <!-- Dynamic WebGL or Canvas-based puzzle pieces will render here -->
+            <canvas id="puzzle-canvas"></canvas>
+            <div class="puzzle-placeholder" id="puzzle-placeholder">
+              <i class="fa-solid fa-crop-simple placeholder-icon"></i>
+              <p>Define Crop & Pinch to Start</p>
+              <span class="subtext">1. Use two hands to position crop box.<br>2. Pinch your index and thumb together to capture.<br>3. Solve the puzzle using gestures!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-footer">
+          <button id="reset-puzzle-btn" class="btn btn-secondary" disabled>
+            <i class="fa-solid fa-rotate-left"></i> Reset Game
+          </button>
+          <label class="btn btn-outline file-upload-btn">
+            <i class="fa-solid fa-image"></i> Upload Image
+            <input type="file" id="image-loader" accept="image/*" style="display: none;">
+          </label>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom panel: Interactive Onboarding / Instructions -->
+    <footer class="app-instructions">
+      <div class="instruction-card">
+        <div class="card-icon"><i class="fa-solid fa-hands-asl-interpreting"></i></div>
+        <div class="card-content">
+          <h3>1. Define Crop</h3>
+          <p>Raise index fingers on <strong>both hands</strong> to span a green framing box over your webcam.</p>
+        </div>
+      </div>
+      <div class="instruction-card">
+        <div class="card-icon"><i class="fa-solid fa-compress"></i></div>
+        <div class="card-content">
+          <h3>2. Pinch to Snap</h3>
+          <p>Bring <strong>thumb & index finger</strong> together on either hand to snap the puzzle image.</p>
+        </div>
+      </div>
+      <div class="instruction-card">
+        <div class="card-icon"><i class="fa-solid fa-hand-pointer"></i></div>
+        <div class="card-content">
+          <h3>3. Drag & Drop</h3>
+          <p>Hover over a tile, <strong>pinch to grab</strong>, drag to a new slot, and release to swap tiles.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Success Modal Overlay -->
+  <div class="modal-overlay" id="victory-modal">
+    <div class="modal-content glass-card">
+      <i class="fa-solid fa-circle-check victory-icon"></i>
+      <h2>Outstanding Job!</h2>
+      <p>You have successfully solved the AeroPuzzle using your gestures.</p>
+      <div class="victory-stats">
+        <div class="v-stat">
+          <span class="v-label">Time Taken</span>
+          <span class="v-value" id="victory-time">00:00.00</span>
+        </div>
+        <div class="v-stat">
+          <span class="v-label">Grid Size</span>
+          <span class="v-value" id="victory-grid">3x3</span>
+        </div>
+      </div>
+      <button id="modal-play-again" class="btn btn-primary btn-lg">Play Again</button>
+    </div>
+  </div>
+
+  <!-- Custom App JS -->
+  <script src="app.js"></script>
+</body>
+</html>
