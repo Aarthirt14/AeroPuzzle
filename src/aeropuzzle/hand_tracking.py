@@ -1,6 +1,7 @@
 import cv2
 import math
 import time
+from importlib.resources import files
 
 HAND_CONNECTIONS = [
     (0, 1), (1, 2), (2, 3), (3, 4), # Thumb
@@ -19,12 +20,23 @@ def _hand_scale(hand):
     return math.sqrt(dx * dx + dy * dy)
 
 
+def _get_model_path():
+    """Resolve the path to the hand_landmarker.task model file
+    using importlib.resources so it works after pip install."""
+    model_ref = files("aeropuzzle.assets").joinpath("hand_landmarker.task")
+    # as_posix() works for mediapipe on all platforms; if the resource
+    # is inside a zip/wheel, importlib extracts it to a temp path.
+    return str(model_ref)
+
+
 class HandTracker:
     def __init__(self):
         from mediapipe.tasks import python
         from mediapipe.tasks.python import vision
 
-        base_options = python.BaseOptions(model_asset_path='hand_landmarker.task')
+        model_path = _get_model_path()
+
+        base_options = python.BaseOptions(model_asset_path=model_path)
         options = vision.HandLandmarkerOptions(
             base_options=base_options,
             num_hands=2,
