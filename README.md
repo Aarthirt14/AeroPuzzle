@@ -1,54 +1,206 @@
 # AeroPuzzle
 
-A real-time, computer vision-based interactive puzzle game. Create and solve puzzles using **air gestures** — no mouse or touch input required.
+[![PyPI version](https://badge.fury.io/py/aeropuzzle.svg)](https://pypi.org/project/aeropuzzle/)
+[![Python Versions](https://img.shields.io/pypi/pyversions/aeropuzzle.svg)](https://pypi.org/project/aeropuzzle/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-AeroPuzzle runs as a standalone desktop application with a glassy HUD overlay, smoothed gesture trails, and automatic completion detection.
-
----
-
-## Key Features
-
-- **Interactive HUD Overlay** — Sleek header and victory card panels drawn dynamically.
-- **Hysteresis Gesture Filtering** — Dual-threshold filtering to eliminate pinch gesture stuttering.
-- **Hand Tracking** — Uses MediaPipe Hand Landmarker for real-time tracking of hand gestures.
-- **Auto-Termination** — Closes automatically after displaying the final score for 5 seconds upon solving.
+AeroPuzzle is a real-time gesture-controlled sliding puzzle game built with Computer Vision and MediaPipe hand tracking. Capture an image from your webcam and solve the puzzle using only hand gestures—no mouse or touch input required.
 
 ---
 
-## Tech Stack
+# Quick Start
 
-- **Language**: Python 3.x
-- **Computer Vision**: OpenCV (image processing, webcam access, and GUI display)
-- **Hand Tracking**: MediaPipe (Tasks-Vision API)
-- **Image Editing & Typography**: Pillow (PIL), NumPy
+## Install
 
----
+```bash
+pip install aeropuzzle
+```
 
-## Getting Started
+## Run
 
-1. Clone or navigate to the repository directory.
-2. Install the required Python dependencies:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Run the application:
-
-   ```bash
-   python app.py
-   ```
+```bash
+python -m aeropuzzle
+```
 
 ---
 
-## How to Play
+# Features
 
-1. **Webcam Active** — Ensure your webcam is connected and allowed.
-2. **Calibrate Crop** — Position both hands in front of the camera and spread your index fingers to define the calibration crop window.
-3. **Capture Snapshot** — Pinch your index finger and thumb together to capture the snapshot and start the puzzle.
-4. **Solve the Puzzle**:
-   - Move your hand to control the pointer cursor.
-   - Pinch to grab a tile.
-   - Drag the tile to its correct position.
-   - Release the pinch to swap it with another tile.
-5. **Win** — Solve the puzzle to see your final score. The application automatically closes 5 seconds after solving.
+* 🖐️ Gesture-controlled gameplay using hand tracking
+* 📷 Create puzzles directly from your webcam feed
+* 🎯 Pinch gestures to grab and move puzzle pieces
+* ⚡ Smooth cursor movement with adaptive filtering
+* 🎨 Modern in-game HUD with timer and status indicators
+* 🏆 Victory screen with completion time
+* 🚪 Automatically closes after puzzle completion
+
+---
+
+# How to Play
+
+1. Launch the game:
+
+```bash
+python -m aeropuzzle
+```
+
+2. Allow access to your webcam.
+
+3. Position yourself in front of the camera.
+
+4. Use your hand gestures to capture an image.
+
+5. Solve the sliding puzzle by:
+
+   * Moving your hand to control the cursor
+   * Pinching to grab a tile
+   * Dragging it into position
+   * Releasing to swap tiles
+
+6. Complete the puzzle to view your finishing time.
+
+---
+
+# Installation
+
+## Install from PyPI
+
+```bash
+pip install aeropuzzle
+```
+
+## Install from source
+
+```bash
+git clone https://github.com/Aarthirt14/AeroPuzzle.git
+
+cd AeroPuzzle
+
+pip install .
+```
+
+---
+
+# Requirements
+
+* Python 3.10+
+* Webcam
+
+The following dependencies are installed automatically:
+
+* OpenCV
+* MediaPipe
+* NumPy
+* Pillow
+
+---
+
+# Tech Stack
+
+| Component           | Technology |
+| ------------------- | ---------- |
+| Language            | Python     |
+| Computer Vision     | OpenCV     |
+| Hand Tracking       | MediaPipe  |
+| Image Processing    | Pillow     |
+| Numerical Computing | NumPy      |
+
+---
+
+# Development
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Aarthirt14/AeroPuzzle.git
+
+cd AeroPuzzle
+```
+
+Install in editable mode:
+
+```bash
+pip install -e .
+```
+
+Build the package:
+
+```bash
+pip install build
+
+python -m build
+```
+
+Upload to PyPI:
+
+```bash
+pip install twine
+
+python -m twine upload dist/*
+```
+
+---
+
+# Project Structure
+
+```
+AeroPuzzle/
+│
+├── aeropuzzle/
+│   ├── __init__.py
+│   ├── __main__.py
+│   └── ...
+│
+├── pyproject.toml
+├── README.md
+└── LICENSE
+```
+
+---
+
+# Screenshots
+
+Add gameplay screenshots or an animated GIF here.
+
+Example:
+
+```
+docs/demo.gif
+docs/screenshot1.png
+```
+
+Visual demonstrations greatly improve the project presentation.
+
+---
+
+# PyPI
+
+Install directly from PyPI:
+
+```bash
+pip install aeropuzzle
+```
+
+Project page:
+
+https://pypi.org/project/aeropuzzle/
+
+---
+
+# GitHub Repository
+
+https://github.com/Aarthirt14/AeroPuzzle
+
+---
+
+# License
+
+This project is licensed under the MIT License.
+
+---
+
+## Author
+
+**Aarthi Suresh**
+
+Built to explore Computer Vision, MediaPipe hand tracking, and natural gesture-based interaction through an interactive puzzle game.
