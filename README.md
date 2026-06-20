@@ -158,21 +158,6 @@ AeroPuzzle/
 
 ---
 
-# Screenshots
-
-Add gameplay screenshots or an animated GIF here.
-
-Example:
-
-```
-docs/demo.gif
-docs/screenshot1.png
-```
-
-Visual demonstrations greatly improve the project presentation.
-
----
-
 # PyPI
 
 Install directly from PyPI:
